@@ -17,6 +17,17 @@
 
     <camel:routeContext id="com.backbase.portal.integration.service.exercise05"
         xmlns="http://camel.apache.org/schema/spring">
+
+        <!-- getting the best score of a particular player -->
+        <route id="com.backbase.training.route.player.highscores">
+            <from uri="restlet:/player/{playerName}/bestscore?restletMethods=GET&amp;restletBinding=#queryStringToHeadersRestletBinding"/>
+            <bean ref="playerManagementService"
+                  method="getBestScore(${header.playerName})"/>
+            <setBody>
+                <simple>{ "user" : "${header.playerName}, "bestScore" : ${body} }</simple>
+            </setBody>
+        </route>
+
         <route id="com.backbase.training.route.player.login">
             <from uri="restlet:/player/login?restletMethods=GET&amp;restletBinding=#queryStringToHeadersRestletBinding"/>
             <log message="Incoming message: ${body}." loggingLevel="DEBUG"/>
